@@ -13,7 +13,7 @@ How to use?
 ```
 
         <dependency>
-            <groupId>com.github.teaey.apns4j</groupId>
+            <groupId>com.github.teaey</groupId>
             <artifactId>apns4j</artifactId>
             <version>1.0.1</version>
         </dependency>
@@ -24,7 +24,7 @@ How to use?
 -----
 
 
-@see [TestSample](src/test/java/cn/teaey/apns/TestSample.java)
+@see [TestSample](src/test/java/cn/teaey/apns4j/TestSample.java)
 
 
 
