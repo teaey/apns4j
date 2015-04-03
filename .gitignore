@@ -1,0 +1,15 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+.idea
+.idea/**
+*.iml
+*.jar
+target
+target/**
+*.ipr
+*.iws
+*.p12
