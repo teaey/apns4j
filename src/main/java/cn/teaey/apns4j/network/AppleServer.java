@@ -24,6 +24,8 @@ package cn.teaey.apns4j.network;
  * @since 1.0.0
  */
 public interface AppleServer {
+    AppleServer SERVER_PRODUCTION = BaseAppleServer.PRODUCTION;
+    AppleServer SERVER_DEVELOPMENT = BaseAppleServer.DEVELOPMENT;
     /**
      * <p>getHost.</p>
      *

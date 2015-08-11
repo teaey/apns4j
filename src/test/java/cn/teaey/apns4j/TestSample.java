@@ -19,6 +19,7 @@
 package cn.teaey.apns4j;
 
 import cn.teaey.apns4j.keystore.KeyStoreWrapper;
+import cn.teaey.apns4j.network.AppleServer;
 import cn.teaey.apns4j.network.SecurityConnection;
 import cn.teaey.apns4j.protocol.NotifyPayload;
 import cn.teaey.feva.common.Interval;
@@ -55,7 +56,7 @@ public class TestSample {
         //get a keystore
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
         //create a ssl socket
-        SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, Apns4j.SERVER_DEVELOPMENT);
+        SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         Assert.assertNotNull(connection);
         connection.sendAndFlush(deviceTokenString, notifyPayload);
         connection.close();
@@ -64,7 +65,7 @@ public class TestSample {
     @Test
     public void asyncService() throws InterruptedException {
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
-        final ApnsAsynService asynService = Apns4j.buildAPNSAsynService(4, keyStoreWrapper, Apns4j.SERVER_DEVELOPMENT);
+        final ApnsAsynService asynService = Apns4j.buildAPNSAsynService(4, keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         List<Thread> tList = new ArrayList<Thread>();
         for (int i = 0; i < 10; i++) {
             Thread t = new Thread(new Runnable() {
@@ -160,7 +161,7 @@ public class TestSample {
     @Test
     public void getConnection() {
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
-        SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, Apns4j.SERVER_DEVELOPMENT);
+        SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         Assert.assertNotNull(connection);
         connection.close();
     }

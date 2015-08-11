@@ -30,9 +30,6 @@ import cn.teaey.apns4j.protocol.NotifyPayload;
  * @since 1.0.2
  */
 public class Apns4j {
-    public static final AppleServer SERVER_PRODUCTION = BaseAppleServer.PRODUCTION;
-    public static final AppleServer SERVER_DEVELOPMENT = BaseAppleServer.DEVELOPMENT;
-
     public static final NotifyPayload buildNotifyPayload() {
         return NotifyPayload.newNotifyPayload();
     }
