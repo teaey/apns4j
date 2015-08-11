@@ -1,29 +1,23 @@
 package cn.teaey.apns4j.network;
 
-import cn.teaey.apns4j.keystore.KeyStoreWraper;
+import cn.teaey.apns4j.keystore.KeyStoreWrapper;
 import cn.teaey.apns4j.keystore.exception.InvalidKeyStoreException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.security.KeyStore;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 
 //import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
- * User: Teaey
- * Date: 13-8-30
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public final class SecuritySocketFactory
 {
-    private static final Logger log       = LoggerFactory.getLogger(SecuritySocketFactory.class);
     /* The algorithm used by KeyManagerFactory */
     private static final String ALGORITHM = ((Security.getProperty("ssl.KeyManagerFactory.algorithm") == null) ? "sunx509" : Security.getProperty("ssl.KeyManagerFactory.algorithm"));
     /* The protocol used to create the SSLSocket */
@@ -53,23 +47,23 @@ public final class SecuritySocketFactory
             return null;
         }
     }
+    public static Builder newBuilder()
+    {
+        return new Builder();
+    }
     public static final class Builder
     {
         private Builder()
         {
         }
-        public static Builder newBuilder()
-        {
-            return new Builder();
-        }
         private String   host;
         private int      port;
         private KeyStore keyStore;
         private String   keyStorePassword;
-        public SecuritySocketFactory.Builder keyStoreWrapper(KeyStoreWraper keyStoreWraper)
+        public SecuritySocketFactory.Builder keyStoreWrapper(KeyStoreWrapper keyStoreWrapper)
         {
-            this.keyStore = keyStoreWraper.getKeyStore();
-            this.keyStorePassword = keyStoreWraper.getKeyStorePassword();
+            this.keyStore = keyStoreWrapper.getKeyStore();
+            this.keyStorePassword = keyStoreWrapper.getKeyStorePassword();
             return this;
         }
         public SecuritySocketFactory.Builder appleServer(AppleServer appleServer)
@@ -136,7 +130,6 @@ public final class SecuritySocketFactory
      */
     protected SSLSocketFactory createSSLSocketFactoryWithTrustManagers(TrustManager[] trustManagers) throws InvalidKeyStoreException
     {
-        log.info("Creating SSLSocketFactory WithTrustManagers :" + Arrays.toString(trustManagers));
         // Get a KeyManager and initialize it
         try
         {
@@ -159,7 +152,6 @@ public final class SecuritySocketFactory
      */
     public SSLSocket createSocket() throws ConnectionException
     {
-        log.info("Creating SSLSocket to " + host + ":" + port);
         try
         {
             return (SSLSocket) sslSocketFactory.createSocket(host, port);

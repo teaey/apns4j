@@ -5,11 +5,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * User: Teaey
- * Date: 13-8-30
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public abstract class Payload
 {

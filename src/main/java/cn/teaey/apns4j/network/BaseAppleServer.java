@@ -1,13 +1,13 @@
 package cn.teaey.apns4j.network;
 /**
- * User: Teaey
- * Date: 13-8-29
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
-public abstract class BaseAppleServer implements AppleServer
+public class BaseAppleServer implements AppleServer
 {
+    public static final AppleServer PRODUCTION = new BaseAppleServer(AppleGateway.NOTIFICATION_SERVER, true);
+    public static final AppleServer DEVELOPMENT = new BaseAppleServer(AppleGateway.NOTIFICATION_SERVER, false);
     private       String       proxyHost;
     private       int          proxyPort;
     private final AppleGateway appleGateway;
@@ -18,7 +18,7 @@ public abstract class BaseAppleServer implements AppleServer
      * @param appleGateway a {@link cn.teaey.apns4j.network.AppleGateway} object.
      * @param isProduction a boolean.
      */
-    public BaseAppleServer(AppleGateway appleGateway, boolean isProduction)
+    protected BaseAppleServer(AppleGateway appleGateway, boolean isProduction)
     {
         checkNull(appleGateway);
         this.appleGateway = appleGateway;

@@ -6,11 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * User: Teaey
- * Date: 13-8-31
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class ListMap<K, V> extends AbstractMap<K, V> implements Map<K, V>
 {

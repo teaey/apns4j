@@ -1,26 +1,17 @@
 package cn.teaey.apns4j.network;
 /**
- * User: Teaey
- * Date: 13-8-29
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public enum AppleGateway
 {
     NOTIFICATION_SERVER("gateway.push.apple.com", 2195, "gateway.sandbox.push.apple.com", 2195);
-    /** Constant <code>ENV_PRODUCTION=true</code> */
-    public static final boolean ENV_PRODUCTION  = true;
-    /** Constant <code>ENV_DEVELOPMENT=false</code> */
-    public static final boolean ENV_DEVELOPMENT = false;
-    /**
-     *
-     */
     private final String productionHost;
     private final int    productionPort;
     private final String developmentHost;
     private final int    developmentPort;
-    private AppleGateway(String productionHost, int productionPort, String developmentHost, int developmentPort)
+    AppleGateway(String productionHost, int productionPort, String developmentHost, int developmentPort)
     {
         this.productionHost = productionHost;
         this.productionPort = productionPort;

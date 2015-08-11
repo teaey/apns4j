@@ -2,13 +2,11 @@ package cn.teaey.apns4j.keystore;
 import java.security.KeyStore;
 
 /**
- * User: Teaey
- * Date: 13-8-30
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
-public class KeyStoreWraper
+public class KeyStoreWrapper
 {
     private final KeyStore keyStore;
     private final String   keyStorePassword;
@@ -18,7 +16,7 @@ public class KeyStoreWraper
      * @param keyStore a {@link java.security.KeyStore} object.
      * @param keyStorePassword a {@link String} object.
      */
-    public KeyStoreWraper(KeyStore keyStore, String keyStorePassword)
+    public KeyStoreWrapper(KeyStore keyStore, String keyStorePassword)
     {
         this.keyStore = keyStore;
         this.keyStorePassword = keyStorePassword;

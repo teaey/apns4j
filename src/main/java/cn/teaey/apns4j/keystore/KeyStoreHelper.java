@@ -13,11 +13,9 @@ import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 
 /**
- * User: Teaey
- * Date: 13-8-29
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class KeyStoreHelper
 {
@@ -28,30 +26,30 @@ public class KeyStoreHelper
     /** Constant <code>KEYSTORE_TYPE_JKS="JKS"</code> */
     public static final String KEYSTORE_TYPE_JKS    = "JKS";
     /**
-     * <p>getKeyStoreWraper.</p>
+     * <p>newKeyStoreWraper.</p>
      *
      * @param keyStoreMeta a {@link Object} object.
      * @param keyStorePassword a {@link String} object.
-     * @return a {@link cn.teaey.apns4j.keystore.KeyStoreWraper} object.
+     * @return a {@link KeyStoreWrapper} object.
      * @throws cn.teaey.apns4j.keystore.exception.InvalidKeyStoreException if any.
      */
-    public static KeyStoreWraper getKeyStoreWraper(Object keyStoreMeta, String keyStorePassword) throws InvalidKeyStoreException
+    public static KeyStoreWrapper newKeyStoreWraper(Object keyStoreMeta, String keyStorePassword) throws InvalidKeyStoreException
     {
-        return getKeyStoreWraper(keyStoreMeta, KEYSTORE_TYPE_PKCS12, keyStorePassword);
+        return newKeyStoreWraper(keyStoreMeta, KEYSTORE_TYPE_PKCS12, keyStorePassword);
     }
     /**
-     * <p>getKeyStoreWraper.</p>
+     * <p>newKeyStoreWraper.</p>
      *
      * @param keyStoreMeta a {@link Object} object.
      * @param keyStoreType a {@link String} object.
      * @param keyStorePassword a {@link String} object.
-     * @return a {@link cn.teaey.apns4j.keystore.KeyStoreWraper} object.
+     * @return a {@link KeyStoreWrapper} object.
      * @throws cn.teaey.apns4j.keystore.exception.InvalidKeyStoreException if any.
      */
-    public static KeyStoreWraper getKeyStoreWraper(Object keyStoreMeta, String keyStoreType, String keyStorePassword) throws InvalidKeyStoreException
+    public static KeyStoreWrapper newKeyStoreWraper(Object keyStoreMeta, String keyStoreType, String keyStorePassword) throws InvalidKeyStoreException
     {
         KeyStore keyStore = getKeyStore(keyStoreMeta, keyStoreType, keyStorePassword);
-        return new KeyStoreWraper(keyStore, keyStorePassword);
+        return new KeyStoreWrapper(keyStore, keyStorePassword);
     }
     /**
      * <p>getKeyStore.</p>

@@ -1,10 +1,8 @@
 package cn.teaey.apns4j.protocol;
 /**
- * User: Teaey
- * Date: 13-8-31
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class InvalidErrorResponse extends RuntimeException
 {

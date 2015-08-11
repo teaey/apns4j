@@ -1,10 +1,8 @@
 package cn.teaey.apns4j.network;
 /**
- * User: Teaey
- * Date: 13-8-30
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class ConnectionException extends Exception
 {

@@ -6,11 +6,9 @@ import cn.teaey.apns4j.protocol.Protocal;
 import java.nio.ByteBuffer;
 
 /**
- * User: Teaey
- * Date: 13-8-29
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class APNSHelper
 {

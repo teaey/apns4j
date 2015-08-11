@@ -2,8 +2,6 @@ package cn.teaey.apns4j.network;
 import cn.teaey.apns4j.APNSHelper;
 import cn.teaey.apns4j.protocol.ErrorResponse;
 import cn.teaey.apns4j.protocol.NotifyPayload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
@@ -12,16 +10,14 @@ import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * User: Teaey
- * Date: 13-8-30
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class SecurityConnection implements Connection, PayloadSender<NotifyPayload>
 {
-    private static final Logger log               = LoggerFactory.getLogger(SecurityConnection.class);
-    private static final int    DEFAULT_TRY_TIMES = 3;
+    //private static final Logger log               = LoggerFactory.getLogger(SecurityConnection.class);
+    public static final int    DEFAULT_TRY_TIMES = 3;
     private final int                   id;
     private final SecuritySocketFactory socketFactory;
     private       SSLSocket             socket;
@@ -88,12 +84,12 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
                 socket();
                 out().write(binaryData);
                 flush();
-                log.debug("Success send payload : {} to device : {} try : {}", new Object[]{jsonString, deviceTokenBytes, i});
+                //log.debug("Success send payload : {} to device : {} try : {}", new Object[]{jsonString, deviceTokenBytes, i});
                 break;
             } catch (IOException e)
             {
                 close();
-                log.error("Failed send payload : {} to device : {} try : {}", new Object[]{jsonString, deviceTokenBytes, e});
+                //log.error("Failed send payload : {} to device : {} try : {}", new Object[]{jsonString, deviceTokenBytes, e});
                 if (i == tryTimes)
                     throw e;
             }
@@ -125,8 +121,8 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
     /**
      * <p>close.</p>
      */
-    public void close()
-    {
+    @Override
+    public void close() throws IOException {
         if (null != socket)
         {
             try
@@ -134,7 +130,8 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
                 socket.close();
             } catch (IOException e)
             {
-                log.error("Error while closing socket", e);
+                //log.error("Error while closing socket", e);
+                throw e;
             } finally
             {
                 in = null;

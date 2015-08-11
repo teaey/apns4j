@@ -1,10 +1,8 @@
 package cn.teaey.apns4j;
 /**
- * User: Teaey
- * Date: 13-9-1
- *
- * @author xiaofei.wxf
- * @version $Id: $Id
+ * @author teaey
+ * @date 13-8-31
+ * @since 1.0.0
  */
 public class ShutdownServiceException extends RuntimeException
 {
