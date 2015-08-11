@@ -1,6 +1,24 @@
+/*
+ *
+ *  * Copyright 2015 The Apns4j Project
+ *  *
+ *  * The Netty Project licenses this file to you under the Apache License,
+ *  * version 2.0 (the "License"); you may not use this file except in compliance
+ *  * with the License. You may obtain a copy of the License at:
+ *  *
+ *  *   http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *  * License for the specific language governing permissions and limitations
+ *  * under the License.
+ *
+ */
+
 package cn.teaey.apns4j.network;
 
-import cn.teaey.apns4j.APNSHelper;
+import cn.teaey.apns4j.ApnsHelper;
 import cn.teaey.apns4j.protocol.ErrorResponse;
 import cn.teaey.apns4j.protocol.NotifyPayload;
 
@@ -73,9 +91,9 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
      * @param notifyPayload    a {@link cn.teaey.apns4j.protocol.NotifyPayload} object.
      */
     public ApnsFuture sendAndFlush(byte[] deviceTokenBytes, NotifyPayload notifyPayload) {
-        APNSHelper.checkDeviceToken(deviceTokenBytes);
+        ApnsHelper.checkDeviceToken(deviceTokenBytes);
         String jsonString = notifyPayload.toJsonString();
-        byte[] binaryData = APNSHelper.toRequestBytes(deviceTokenBytes, jsonString, notifyPayload.getIdentifier(), notifyPayload.getExpiry());
+        byte[] binaryData = ApnsHelper.toRequestBytes(deviceTokenBytes, jsonString, notifyPayload.getIdentifier(), notifyPayload.getExpiry());
         for (int i = 1; i <= tryTimes; i++) {
             try {
                 socket();
@@ -104,7 +122,7 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
      * @throws java.io.IOException if any.
      */
     public ApnsFuture sendAndFlush(String deviceTokenString, NotifyPayload notifyPayload) {
-        return sendAndFlush(APNSHelper.toByteArray(deviceTokenString), notifyPayload);
+        return sendAndFlush(ApnsHelper.toByteArray(deviceTokenString), notifyPayload);
     }
 
     /**
@@ -114,7 +132,7 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
      */
     public ErrorResponse readErrorResponse() {
         try {
-            if(in().available() >= 6) {
+            if (in().available() >= 6) {
                 byte[] data = new byte[6];
                 recv(data);
                 return new ErrorResponse(data);
@@ -186,7 +204,6 @@ public class SecurityConnection implements Connection, PayloadSender<NotifyPaylo
 
     /**
      * <p>socket.</p>
-     *
      */
     protected void socket() throws IOException {
         if (null != socket && null != in && null != out && !socket.isClosed()) {
