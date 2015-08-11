@@ -51,8 +51,8 @@ public class Apns4j {
         return SecurityConnection.newSecurityConnection(factory);
     }
 
-    public static ApnsAsynService buildAPNSAsynService(int executorSize, KeyStoreWrapper keyStoreWrapper, AppleServer appleServer) {
+    public static ApnsService buildApnsService(int executorSize, KeyStoreWrapper keyStoreWrapper, AppleServer appleServer) {
         SecuritySocketFactory securitySocketFactory = buildSecuritySocketFactory(keyStoreWrapper, appleServer);
-        return ApnsAsynService.newAPNSAsynService(executorSize, securitySocketFactory);
+        return ApnsService.newApnsService(executorSize, securitySocketFactory);
     }
 }

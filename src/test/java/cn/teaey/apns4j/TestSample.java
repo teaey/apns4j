@@ -47,25 +47,29 @@ public class TestSample {
      */
     @Test
     public void rawInvoke() {
-        //create & init a notify payload
+        //create & init notify payload
         NotifyPayload notifyPayload = Apns4j.buildNotifyPayload()
                 .alert(Long.toString(System.currentTimeMillis()))
                 .badge(2);
         //notifyPayload.sound("default").alertBody("Pushed By \\\" apns4j").alertActionLocKey("Button Text");
 
-        //get a keystore
+        //build keystore
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
-        //create a ssl socket
+        //create a ssl connection
         SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         Assert.assertNotNull(connection);
         connection.sendAndFlush(deviceTokenString, notifyPayload);
+
+        //maybe more send operations
+
+        //in the end
         connection.close();
     }
 
     @Test
     public void asyncService() throws InterruptedException {
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
-        final ApnsAsynService asynService = Apns4j.buildAPNSAsynService(4, keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
+        final ApnsService service = Apns4j.buildApnsService(4, keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         List<Thread> tList = new ArrayList<Thread>();
         for (int i = 0; i < 10; i++) {
             Thread t = new Thread(new Runnable() {
@@ -75,7 +79,7 @@ public class TestSample {
                         NotifyPayload notifyPayload = Apns4j.buildNotifyPayload()
                                 .alert("" + System.currentTimeMillis())
                                 .badge((int) System.currentTimeMillis() % 100);
-                        asynService.sendAndFlush(deviceTokenString, notifyPayload);
+                        service.sendAndFlush(deviceTokenString, notifyPayload);
                         try {
                             Thread.sleep(100);
                         } catch (Exception e) {
@@ -92,7 +96,7 @@ public class TestSample {
         for (Thread each : tList) {
             each.join();
         }
-        asynService.shutdown();
+        service.shutdown();
     }
 
     @Test

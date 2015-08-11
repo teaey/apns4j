@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @date 13-8-31
  * @since 1.0.0
  */
-public class ApnsAsynService implements PayloadSender<NotifyPayload> {
+public class ApnsService implements PayloadSender<NotifyPayload> {
     public static final Object SEND_SUCCESS = new Object();
     private static final int processors = Runtime.getRuntime().availableProcessors();
     private final int size;
@@ -50,7 +50,7 @@ public class ApnsAsynService implements PayloadSender<NotifyPayload> {
         }
     };
 
-    private ApnsAsynService(int executorSize, SecuritySocketFactory securityConnectionFactory, int tryTimes) {
+    private ApnsService(int executorSize, SecuritySocketFactory securityConnectionFactory, int tryTimes) {
         this.size = (executorSize > processors) ? processors : executorSize;
         this.securitySocketFactory = securityConnectionFactory;
         this.executorService = Executors.newFixedThreadPool(this.size);
@@ -63,10 +63,10 @@ public class ApnsAsynService implements PayloadSender<NotifyPayload> {
      *
      * @param executorSize          a int.
      * @param securitySocketFactory a {@link cn.teaey.apns4j.network.SecuritySocketFactory} object.
-     * @return a {@link ApnsAsynService} object.
+     * @return a {@link ApnsService} object.
      */
-    public static ApnsAsynService newAPNSAsynService(int executorSize, SecuritySocketFactory securitySocketFactory) {
-        return newAPNSAsynService(executorSize, securitySocketFactory, SecurityConnection.DEFAULT_TRY_TIMES);
+    public static ApnsService newApnsService(int executorSize, SecuritySocketFactory securitySocketFactory) {
+        return newApnsService(executorSize, securitySocketFactory, SecurityConnection.DEFAULT_TRY_TIMES);
     }
 
     /**
@@ -75,10 +75,10 @@ public class ApnsAsynService implements PayloadSender<NotifyPayload> {
      * @param executorSize          a int.
      * @param securitySocketFactory a {@link cn.teaey.apns4j.network.SecuritySocketFactory} object.
      * @param tryTimes
-     * @return a {@link ApnsAsynService} object.
+     * @return a {@link ApnsService} object.
      */
-    public static ApnsAsynService newAPNSAsynService(int executorSize, SecuritySocketFactory securitySocketFactory, int tryTimes) {
-        return new ApnsAsynService(executorSize, securitySocketFactory, tryTimes);
+    public static ApnsService newApnsService(int executorSize, SecuritySocketFactory securitySocketFactory, int tryTimes) {
+        return new ApnsService(executorSize, securitySocketFactory, tryTimes);
     }
 
     /**
