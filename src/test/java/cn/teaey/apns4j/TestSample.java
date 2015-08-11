@@ -1,8 +1,7 @@
 package cn.teaey.apns4j;
 
 import cn.teaey.apns4j.keystore.KeyStoreWrapper;
-import cn.teaey.apns4j.keystore.exception.InvalidKeyStoreException;
-import cn.teaey.apns4j.network.*;
+import cn.teaey.apns4j.network.SecurityConnection;
 import cn.teaey.apns4j.protocol.NotifyPayload;
 import cn.teaey.feva.common.Interval;
 import junit.framework.Assert;
@@ -28,13 +27,12 @@ public class TestSample {
      * Very Simple to use APNS4j
      */
     @Test
-    public void rawInvoke() throws InvalidKeyStoreException, ConnectionException, IOException {
+    public void rawInvoke() {
         //create & init a notify payload
         NotifyPayload notifyPayload = Apns4j.buildNotifyPayload()
                 .alert(Long.toString(System.currentTimeMillis()))
                 .badge(2);
         //notifyPayload.sound("default").alertBody("Pushed By \\\" apns4j").alertActionLocKey("Button Text");
-
 
         //get a keystore
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
@@ -46,7 +44,7 @@ public class TestSample {
     }
 
     @Test
-    public void asyncService() throws InvalidKeyStoreException, ConnectionException, IOException, InterruptedException {
+    public void asyncService() throws InterruptedException {
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
         final APNSAsynService asynService = Apns4j.buildAPNSAsynService(4, keyStoreWrapper, Apns4j.SERVER_DEVELOPMENT);
         List<Thread> tList = new ArrayList<Thread>();
@@ -103,33 +101,33 @@ public class TestSample {
      * build KeyStore
      */
     @Test
-    public void loadKeyStoreWithClassPath() throws InvalidKeyStoreException {
+    public void loadKeyStoreWithClassPath() {
         KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
-    public void loadKeyStoreWithSystemPath() throws InvalidKeyStoreException {
+    public void loadKeyStoreWithSystemPath() {
         KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper("D:/iphone_dev.p12", keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
-    public void loadKeyStoreByFile() throws InvalidKeyStoreException {
+    public void loadKeyStoreByFile() {
         File f = new File("D:/iphone_dev.p12");
         KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper(f, keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
-    public void loadKeyStoreByInputStream() throws InvalidKeyStoreException {
+    public void loadKeyStoreByInputStream() {
         InputStream in = getClass().getClassLoader().getResourceAsStream("iphone_dev.p12");
         KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper(in, keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
-    public void loadKeyStoreByByteArray() throws IOException, InvalidKeyStoreException {
+    public void loadKeyStoreByByteArray() throws IOException {
         InputStream in = getClass().getClassLoader().getResourceAsStream("iphone_dev.p12");
         byte[] bytes = new byte[in.available()];
         in.read(bytes);
@@ -142,7 +140,7 @@ public class TestSample {
      * How to get Connection
      */
     @Test
-    public void getConnection() throws InvalidKeyStoreException, ConnectionException, IOException {
+    public void getConnection() {
         KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
         SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, Apns4j.SERVER_DEVELOPMENT);
         Assert.assertNotNull(connection);

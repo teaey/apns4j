@@ -1,14 +1,13 @@
 package cn.teaey.apns4j.network;
+
 import java.io.Closeable;
-import java.io.IOException;
 
 /**
  * @author teaey
  * @date 13-8-31
  * @since 1.0.0
  */
-public interface Connection extends Closeable
-{
+public interface Connection extends Closeable {
     /**
      * Writes <code>data.length</code> bytes from the specified byte array
      * to this connection
@@ -16,7 +15,8 @@ public interface Connection extends Closeable
      * @param data an array of byte.
      * @throws java.io.IOException if any.
      */
-    void send(byte[] data) throws IOException;
+    void send(byte[] data);
+
     /**
      * Reads some number of bytes from the connection and stores them into
      * the buffer array <code>data</code>. The number of bytes actually read is
@@ -26,5 +26,5 @@ public interface Connection extends Closeable
      * @return a int.
      * @throws java.io.IOException if any.
      */
-    int recv(byte[] data) throws IOException;
+    int recv(byte[] data);
 }

@@ -22,6 +22,10 @@ public class NotifyPayload extends Payload {
 
     private final Map<String, Object> apsDict = new HashMap<String, Object>();
 
+    private NotifyPayload() {
+        addDictionary(ATTR_APS, apsDict);
+    }
+
     /**
      * <p>newNotifyPayload.</p>
      *
@@ -29,10 +33,6 @@ public class NotifyPayload extends Payload {
      */
     public static final NotifyPayload newNotifyPayload() {
         return new NotifyPayload();
-    }
-
-    private NotifyPayload() {
-        addDictionary(ATTR_APS, apsDict);
     }
 
     /**

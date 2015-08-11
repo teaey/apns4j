@@ -10,28 +10,27 @@ import java.util.Set;
  * @date 13-8-31
  * @since 1.0.0
  */
-public class ListMap<K, V> extends AbstractMap<K, V> implements Map<K, V>
-{
+public class ListMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
     Entry[] table;
-    int     size;
+    int size;
+
     /**
      * <p>Constructor for ListMap.</p>
      */
-    public ListMap()
-    {
+    public ListMap() {
         table = new Entry[16];
     }
+
     /**
      * <p>Constructor for ListMap.</p>
      *
      * @param initialCapacity a int.
      */
-    public ListMap(int initialCapacity)
-    {
+    public ListMap(int initialCapacity) {
         table = new Entry[initialCapacity];
     }
-    private Entry remove(int index)
-    {
+
+    private Entry remove(int index) {
         rangeCheck(index);
         Entry oldValue = table[index];
         int numMoved = size - index - 1;
@@ -40,86 +39,84 @@ public class ListMap<K, V> extends AbstractMap<K, V> implements Map<K, V>
         table[--size] = null;
         return oldValue;
     }
-    private void rangeCheck(int index)
-    {
-        if (index >= size)
-        {
+
+    private void rangeCheck(int index) {
+        if (index >= size) {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
         }
     }
-    private String outOfBoundsMsg(int index)
-    {
+
+    private String outOfBoundsMsg(int index) {
         return "Index: " + index + ", Size: " + size;
     }
-    static class Entry<K, V> implements Map.Entry<K, V>
-    {
+
+    private Entry index(int index) {
+        rangeCheck(index);
+        return table[index];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return null;
+    }
+
+    static class Entry<K, V> implements Map.Entry<K, V> {
         final K key;
         V value;
-        Entry(K key, V value)
-        {
+
+        Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
+
         @Override
-        public K getKey()
-        {
+        public K getKey() {
             return key;
         }
+
         @Override
-        public V getValue()
-        {
+        public V getValue() {
             return value;
         }
+
         @Override
-        public V setValue(V value)
-        {
+        public V setValue(V value) {
             V oldValue = value;
             this.value = value;
             return oldValue;
         }
-        public String toString()
-        {
+
+        public String toString() {
             return "[" + getKey() + ":" + getValue() + "]";
         }
     }
-    private Entry index(int index)
-    {
-        rangeCheck(index);
-        return table[index];
-    }
-    private abstract class ListIterator<K, V> implements Iterator<Map.Entry<K, V>>
-    {
+
+    private abstract class ListIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         int index;
-        ListIterator()
-        {
+
+        ListIterator() {
         }
+
         @Override
-        public boolean hasNext()
-        {
-            if (index == (size() - 1))
-            {
+        public boolean hasNext() {
+            if (index == (size() - 1)) {
                 return false;
-            }
-            else
-            {
+            } else {
                 return true;
             }
         }
+
         @Override
-        public Map.Entry<K, V> next()
-        {
+        public Map.Entry<K, V> next() {
             return index(++index);
         }
+
         @Override
-        public void remove()
-        {
+        public void remove() {
             ListMap.this.remove(index);
         }
-    }
-    /** {@inheritDoc} */
-    @Override
-    public Set<Map.Entry<K, V>> entrySet()
-    {
-        return null;
     }
 }
