@@ -29,28 +29,28 @@ public interface AppleServer {
      *
      * @return a {@link String} object.
      */
-    public String getHost();
+    String getHost();
 
     /**
      * <p>getPort.</p>
      *
      * @return a int.
      */
-    public int getPort();
+    int getPort();
 
     /**
      * <p>getProxyHost.</p>
      *
      * @return a {@link String} object.
      */
-    public String getProxyHost();
+    String getProxyHost();
 
     /**
      * <p>getProxyPort.</p>
      *
      * @return a int.
      */
-    public int getProxyPort();
+    int getProxyPort();
 
     /**
      * <p>setProxy.</p>
@@ -58,5 +58,5 @@ public interface AppleServer {
      * @param proxyHost a {@link String} object.
      * @param proxyPort a int.
      */
-    public void setProxy(String proxyHost, int proxyPort);
+    void setProxy(String proxyHost, int proxyPort);
 }

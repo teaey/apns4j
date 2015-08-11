@@ -120,11 +120,7 @@ public class ListMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
 
         @Override
         public boolean hasNext() {
-            if (index == (size() - 1)) {
-                return false;
-            } else {
-                return true;
-            }
+            return index != (size() - 1);
         }
 
         @Override
