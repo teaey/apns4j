@@ -17,6 +17,15 @@
     <url>https://github.com/teaey/apns4j.git</url>
     <name>Apns4j</name>
 
+    <developers>
+        <developer>
+            <name>Teaey(Xiaofei.Wu)</name>
+            <email>masfay@163.com</email>
+            <url>teaey.github.com</url>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
