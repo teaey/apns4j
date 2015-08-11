@@ -19,6 +19,7 @@
 package cn.teaey.apns4j;
 
 import cn.teaey.apns4j.keystore.KeyStoreWrapper;
+import cn.teaey.apns4j.network.ApnsFuture;
 import cn.teaey.apns4j.network.AppleServer;
 import cn.teaey.apns4j.network.SecurityConnection;
 import cn.teaey.apns4j.protocol.NotifyPayload;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Teaey
@@ -54,7 +56,7 @@ public class TestSample {
         //notifyPayload.sound("default").alertBody("Pushed By \\\" apns4j").alertActionLocKey("Button Text");
 
         //build keystore
-        KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
+        KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWrapper("iphone_dev.p12", keyStorePasswd);
         //create a ssl connection
         SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         Assert.assertNotNull(connection);
@@ -68,7 +70,7 @@ public class TestSample {
 
     @Test
     public void asyncService() throws InterruptedException {
-        KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
+        KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWrapper("iphone_dev.p12", keyStorePasswd);
         final ApnsService service = Apns4j.buildApnsService(4, keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         List<Thread> tList = new ArrayList<Thread>();
         for (int i = 0; i < 10; i++) {
@@ -79,11 +81,16 @@ public class TestSample {
                         NotifyPayload notifyPayload = Apns4j.buildNotifyPayload()
                                 .alert("" + System.currentTimeMillis())
                                 .badge((int) System.currentTimeMillis() % 100);
-                        service.sendAndFlush(deviceTokenString, notifyPayload);
+                        ApnsFuture f = service.sendAndFlush(deviceTokenString, notifyPayload);
                         try {
-                            Thread.sleep(100);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
+                            Object v = f.get();
+                            if(v instanceof Exception) {
+                                System.out.println("Send faild:" + notifyPayload.getIdentifier());
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -125,27 +132,27 @@ public class TestSample {
      */
     @Test
     public void loadKeyStoreWithClassPath() {
-        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
+        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWrapper("iphone_dev.p12", keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
     public void loadKeyStoreWithSystemPath() {
-        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper("D:/iphone_dev.p12", keyStorePasswd);
+        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWrapper("D:/iphone_dev.p12", keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
     public void loadKeyStoreByFile() {
         File f = new File("D:/iphone_dev.p12");
-        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper(f, keyStorePasswd);
+        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWrapper(f, keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
     @Test
     public void loadKeyStoreByInputStream() {
         InputStream in = getClass().getClassLoader().getResourceAsStream("iphone_dev.p12");
-        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper(in, keyStorePasswd);
+        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWrapper(in, keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
@@ -155,7 +162,7 @@ public class TestSample {
         byte[] bytes = new byte[in.available()];
         in.read(bytes);
         in.close();
-        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWraper(bytes, keyStorePasswd);
+        KeyStoreWrapper keyStore = Apns4j.buildKeyStoreWrapper(bytes, keyStorePasswd);
         Assert.assertNotNull(keyStore);
     }
 
@@ -164,7 +171,7 @@ public class TestSample {
      */
     @Test
     public void getConnection() {
-        KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWraper("iphone_dev.p12", keyStorePasswd);
+        KeyStoreWrapper keyStoreWrapper = Apns4j.buildKeyStoreWrapper("iphone_dev.p12", keyStorePasswd);
         SecurityConnection connection = Apns4j.buildSecurityConnection(keyStoreWrapper, AppleServer.SERVER_DEVELOPMENT);
         Assert.assertNotNull(connection);
         connection.close();

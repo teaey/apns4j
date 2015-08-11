@@ -34,8 +34,8 @@ public class Apns4j {
         return NotifyPayload.newNotifyPayload();
     }
 
-    public static final KeyStoreWrapper buildKeyStoreWraper(Object keyStoreMeta, String keyStorePassword) {
-        return KeyStoreHelper.newKeyStoreWraper(keyStoreMeta, keyStorePassword);
+    public static final KeyStoreWrapper buildKeyStoreWrapper(Object keyStoreMeta, String keyStorePassword) {
+        return KeyStoreHelper.newKeyStoreWrapper(keyStoreMeta, keyStorePassword);
     }
 
     private static final SecuritySocketFactory buildSecuritySocketFactory(KeyStoreWrapper keyStoreWrapper, AppleServer appleServer) {

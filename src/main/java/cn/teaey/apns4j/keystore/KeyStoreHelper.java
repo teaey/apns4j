@@ -46,19 +46,19 @@ public class KeyStoreHelper {
     public static final String KEYSTORE_TYPE_JKS = "JKS";
 
     /**
-     * <p>newKeyStoreWraper.</p>
+     * <p>newKeyStoreWrapper.</p>
      *
      * @param keyStoreMeta     a {@link Object} object.
      * @param keyStorePassword a {@link String} object.
      * @return a {@link KeyStoreWrapper} object.
      * @throws InvalidKeyStoreException if any.
      */
-    public static KeyStoreWrapper newKeyStoreWraper(Object keyStoreMeta, String keyStorePassword) {
-        return newKeyStoreWraper(keyStoreMeta, KEYSTORE_TYPE_PKCS12, keyStorePassword);
+    public static KeyStoreWrapper newKeyStoreWrapper(Object keyStoreMeta, String keyStorePassword) {
+        return newKeyStoreWrapper(keyStoreMeta, KEYSTORE_TYPE_PKCS12, keyStorePassword);
     }
 
     /**
-     * <p>newKeyStoreWraper.</p>
+     * <p>newKeyStoreWrapper.</p>
      *
      * @param keyStoreMeta     a {@link Object} object.
      * @param keyStoreType     a {@link String} object.
@@ -66,7 +66,7 @@ public class KeyStoreHelper {
      * @return a {@link KeyStoreWrapper} object.
      * @throws InvalidKeyStoreException if any.
      */
-    public static KeyStoreWrapper newKeyStoreWraper(Object keyStoreMeta, String keyStoreType, String keyStorePassword) {
+    public static KeyStoreWrapper newKeyStoreWrapper(Object keyStoreMeta, String keyStoreType, String keyStorePassword) {
         KeyStore keyStore = null;
         try {
             keyStore = getKeyStore(keyStoreMeta, keyStoreType, keyStorePassword);

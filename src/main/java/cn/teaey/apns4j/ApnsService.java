@@ -36,7 +36,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 1.0.0
  */
 public class ApnsService implements PayloadSender<NotifyPayload> {
-    public static final Object SEND_SUCCESS = new Object();
     private static final int processors = Runtime.getRuntime().availableProcessors();
     private final int size;
     private final SecuritySocketFactory securitySocketFactory;
@@ -127,8 +126,7 @@ public class ApnsService implements PayloadSender<NotifyPayload> {
         @Override
         public Object call() {
             try {
-                threadSelfConnection.get().sendAndFlush(deviceToken, payload);
-                return SEND_SUCCESS;
+                return threadSelfConnection.get().sendAndFlush(deviceToken, payload);
             } catch (Exception e) {
                 //log.error("Failed cause IOException deviceToken={} payload={}", deviceToken, payload.toJsonString(), e);
                 return e;
