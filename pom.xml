@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.teaey</groupId>
+        <groupId>cn.teaey</groupId>
         <artifactId>teaey-parent</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <groupId>com.github.teaey</groupId>
