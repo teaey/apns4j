@@ -19,17 +19,26 @@
 package cn.teaey.apns4j;
 
 /**
- * @author teaey
- * @date 13-8-31
- * @since 1.0.0
+ * @author xiaofei.wxf
+ * @date 2015/8/11
  */
-public class ShutdownServiceException extends RuntimeException {
-    /**
-     * <p>Constructor for ShutdownServiceException.</p>
-     *
-     * @param msg a {@link String} object.
-     */
-    public ShutdownServiceException(String msg) {
-        super(msg);
+public class ApnsException extends RuntimeException {
+    public ApnsException() {
+    }
+
+    public ApnsException(String message) {
+        super(message);
+    }
+
+    public ApnsException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ApnsException(Throwable cause) {
+        super(cause);
+    }
+
+    public ApnsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

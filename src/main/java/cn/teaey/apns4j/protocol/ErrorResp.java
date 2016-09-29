@@ -21,21 +21,21 @@ package cn.teaey.apns4j.protocol;
 import java.nio.ByteBuffer;
 
 /**
- * @author teaey
- * @date 13-8-31
- * @since 1.0.0
+ * @author teaey(xiaofei.wxf)
+ * @since 1.0.3
  */
-public class ErrorResponse {
+public class ErrorResp {
+
     private final byte command;
     private final Status status;
     private final int identifier;
 
     /**
-     * <p>Constructor for ErrorResponse.</p>
+     * <p>Constructor for ErrorResp.</p>
      *
      * @param data an array of byte.
      */
-    public ErrorResponse(byte[] data) {
+    public ErrorResp(byte[] data) {
         if (null == data || data.length != 6) {
             throw new InvalidErrorResponse("");
         }
@@ -46,13 +46,13 @@ public class ErrorResponse {
     }
 
     /**
-     * <p>Constructor for ErrorResponse.</p>
+     * <p>Constructor for ErrorResp.</p>
      *
      * @param command    a byte.
      * @param status     a byte.
      * @param identifier a int.
      */
-    public ErrorResponse(byte command, byte status, int identifier) {
+    public ErrorResp(byte command, byte status, int identifier) {
         this.command = command;
         this.status = Status.resolove(status);
         this.identifier = identifier;
@@ -114,5 +114,14 @@ public class ErrorResponse {
             }
             return Status.ERROR;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ErrorResp{" +
+                "command=" + command +
+                ", status=" + status +
+                ", identifier=" + identifier +
+                '}';
     }
 }

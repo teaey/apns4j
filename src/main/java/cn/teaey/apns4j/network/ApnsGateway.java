@@ -19,26 +19,29 @@
 package cn.teaey.apns4j.network;
 
 /**
- * @author xiaofei.wxf
- * @date 2015/8/11
+ * @author teaey(xiaofei.wxf)
+ * @since 1.0.3
  */
-public class ApnsException extends RuntimeException {
-    public ApnsException() {
+public enum ApnsGateway {
+    DEVELOPMENT("gateway.sandbox.push.apple.com", 2195),
+    PRODUCTION("gateway.push.apple.com", 2195),
+    RESTFUL_DEVELOPMENT("api.development.push.apple.com", 443),
+    RESTFUL_PRODUCTION("api.push.apple.com", 443),
+    RESTFUL_DEVELOPMENT_BAK("api.development.push.apple.com", 2197),
+    RESTFUL_PRODUCTION_BAK("api.push.apple.com", 2197);
+    private final String host;
+    private final int port;
+
+    ApnsGateway(String host, int port) {
+        this.host = host;
+        this.port = port;
     }
 
-    public ApnsException(String message) {
-        super(message);
+    public String host() {
+        return this.host;
     }
 
-    public ApnsException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ApnsException(Throwable cause) {
-        super(cause);
-    }
-
-    public ApnsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public int port() {
+        return this.port;
     }
 }

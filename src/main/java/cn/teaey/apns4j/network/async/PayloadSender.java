@@ -16,49 +16,27 @@
  *
  */
 
-package cn.teaey.apns4j.network;
+package cn.teaey.apns4j.network.async;
 
 /**
  * @author teaey
  * @date 13-8-31
  * @since 1.0.0
  */
-public interface AppleServer {
-    AppleServer SERVER_PRODUCTION = BaseAppleServer.PRODUCTION;
-    AppleServer SERVER_DEVELOPMENT = BaseAppleServer.DEVELOPMENT;
+public interface PayloadSender<T> {
     /**
-     * <p>getHost.</p>
+     * <p>sendAndFlush.</p>
      *
-     * @return a {@link String} object.
+     * @param deviceTokenBytes an array of byte.
+     * @param payload          a T object.
      */
-    String getHost();
+    ApnsFuture sendAndFlush(byte[] deviceTokenBytes, T payload);
 
     /**
-     * <p>getPort.</p>
+     * <p>sendAndFlush.</p>
      *
-     * @return a int.
+     * @param deviceTokenString a {@link String} object.
+     * @param payload           a T object.
      */
-    int getPort();
-
-    /**
-     * <p>getProxyHost.</p>
-     *
-     * @return a {@link String} object.
-     */
-    String getProxyHost();
-
-    /**
-     * <p>getProxyPort.</p>
-     *
-     * @return a int.
-     */
-    int getProxyPort();
-
-    /**
-     * <p>setProxy.</p>
-     *
-     * @param proxyHost a {@link String} object.
-     * @param proxyPort a int.
-     */
-    void setProxy(String proxyHost, int proxyPort);
+    ApnsFuture sendAndFlush(String deviceTokenString, T payload);
 }

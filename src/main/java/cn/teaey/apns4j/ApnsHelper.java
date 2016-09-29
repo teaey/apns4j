@@ -18,8 +18,9 @@
 
 package cn.teaey.apns4j;
 
+import cn.teaey.apns4j.protocol.ApnsPayload;
 import cn.teaey.apns4j.protocol.InvalidDeviceTokenException;
-import cn.teaey.apns4j.protocol.NotifyPayload;
+import cn.teaey.apns4j.protocol.Payload;
 import cn.teaey.apns4j.protocol.Protocal;
 
 import java.nio.ByteBuffer;
@@ -36,15 +37,15 @@ public class ApnsHelper {
      * <p>toRequestBytes.</p>
      *
      * @param deviceTokenBytes an array of byte.
-     * @param notifyPayload    a {@link cn.teaey.apns4j.protocol.NotifyPayload} object.
+     * @param apnsPayload      a {@link ApnsPayload} object.
      * @return an array of byte.
      */
-    public static final byte[] toRequestBytes(byte[] deviceTokenBytes, NotifyPayload notifyPayload) {
-        byte[] payloadBytes = notifyPayload.toJsonBytes();
+    public static final byte[] toRequestBytes(byte[] deviceTokenBytes, ApnsPayload apnsPayload) {
+        byte[] payloadBytes = apnsPayload.toJsonBytes();
         ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + payloadBytes.length);
         buffer.put((byte) 1);
-        buffer.putInt(notifyPayload.getIdentifier());
-        buffer.putInt(notifyPayload.getExpiry());
+        buffer.putInt(apnsPayload.getIdentifier());
+        buffer.putInt(apnsPayload.getExpiry());
         buffer.putShort((short) 32);
         buffer.put(deviceTokenBytes);
         buffer.putShort((short) payloadBytes.length);
@@ -124,6 +125,12 @@ public class ApnsHelper {
         }
         if (deviceToken instanceof byte[] && ((byte[]) deviceToken).length != 32) {
             throw new InvalidDeviceTokenException("device token bytes must [32] length not [" + ((byte[]) deviceToken).length + "]");
+        }
+    }
+
+    public static final void checkNullThrowException(Object target, String name) {
+        if (null == target) {
+            throw new NullPointerException(name == null ? "" : name);
         }
     }
 }

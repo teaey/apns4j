@@ -16,9 +16,9 @@
  *
  */
 
-package cn.teaey.apns4j.network;
+package cn.teaey.apns4j.network.async;
 
-import cn.teaey.apns4j.protocol.NotifyPayload;
+import cn.teaey.apns4j.protocol.ApnsPayload;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -32,9 +32,9 @@ import java.util.concurrent.TimeoutException;
 public class ApnsFuture implements Future {
     private final Future future;
     private final byte[] deviceToken;
-    private final NotifyPayload payload;
+    private final ApnsPayload payload;
 
-    public ApnsFuture(Future future, byte[] deviceToken, NotifyPayload payload) {
+    public ApnsFuture(Future future, byte[] deviceToken, ApnsPayload payload) {
         this.future = future;
         this.deviceToken = deviceToken;
         this.payload = payload;
@@ -69,7 +69,7 @@ public class ApnsFuture implements Future {
         return deviceToken;
     }
 
-    public NotifyPayload getPayload() {
+    public ApnsPayload getPayload() {
         return payload;
     }
 }

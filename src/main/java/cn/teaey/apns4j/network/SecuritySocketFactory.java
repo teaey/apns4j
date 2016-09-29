@@ -18,8 +18,8 @@
 
 package cn.teaey.apns4j.network;
 
+import cn.teaey.apns4j.ApnsException;
 import cn.teaey.apns4j.keystore.InvalidKeyStoreException;
-import cn.teaey.apns4j.keystore.KeyStoreWrapper;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -47,20 +47,49 @@ public final class SecuritySocketFactory {
     private final String host;
     private final int port;
     private final KeyStore keyStore;
-    private final String keyStorePassword;
+    private final String keyStorePwd;
     private final SSLSocketFactory sslSocketFactory;
-    private TrustManager[] trustManagers = new TrustManager[]{new ServerTrustingTrustManager()};
+    private final TrustManager[] trustManagers = new TrustManager[]{new ServerTrustingTrustManager()};
 
-    private SecuritySocketFactory(String host, int port, KeyStore keyStore, String keyStorePassword) throws InvalidKeyStoreException {
+    public SecuritySocketFactory(String host, int port, KeyStore keyStore, String keyStorePwd) {
+        if (host == null) {
+            throw new NullPointerException("host");
+        }
+        if (keyStore == null) {
+            throw new NullPointerException("keystore");
+        }
+        if (keyStorePwd == null) {
+            throw new NullPointerException("keyStorePwd");
+        }
         this.host = host;
         this.port = port;
         this.keyStore = keyStore;
-        this.keyStorePassword = keyStorePassword;
+        this.keyStorePwd = keyStorePwd;
         this.sslSocketFactory = createSSLSocketFactoryWithTrustManagers(trustManagers);
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public KeyStore getKeyStore() {
+        return keyStore;
+    }
+
+    public String getKeyStorePwd() {
+        return keyStorePwd;
+    }
+
+    public SSLSocketFactory getSslSocketFactory() {
+        return sslSocketFactory;
+    }
+
+    public TrustManager[] getTrustManagers() {
+        return trustManagers;
     }
 
     /**
@@ -70,17 +99,17 @@ public final class SecuritySocketFactory {
      * @return a {@link javax.net.ssl.SSLSocketFactory} object.
      * @throws InvalidKeyStoreException if any.
      */
-    protected SSLSocketFactory createSSLSocketFactoryWithTrustManagers(TrustManager[] trustManagers) throws InvalidKeyStoreException {
+    protected SSLSocketFactory createSSLSocketFactoryWithTrustManagers(TrustManager[] trustManagers) {
         // Get a KeyManager and initialize it
         try {
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(ALGORITHM);
-            kmf.init(keyStore, keyStorePassword.toCharArray());
+            kmf.init(keyStore, keyStorePwd.toCharArray());
             // Get the SSLContext to help create SSLSocketFactory
             SSLContext sslc = SSLContext.getInstance(PROTOCOL);
             sslc.init(kmf.getKeyManagers(), trustManagers, null);
             return sslc.getSocketFactory();
         } catch (Exception e) {
-            throw new InvalidKeyStoreException(e);
+            throw new ApnsException(new InvalidKeyStoreException(e));
         }
     }
 
@@ -91,64 +120,6 @@ public final class SecuritySocketFactory {
      */
     public SSLSocket createSocket() throws IOException {
         return (SSLSocket) sslSocketFactory.createSocket(host, port);
-    }
-
-    public static final class Builder {
-        private String host;
-        private int port;
-        private KeyStore keyStore;
-        private String keyStorePassword;
-
-        private Builder() {
-        }
-
-        public SecuritySocketFactory.Builder keyStoreWrapper(KeyStoreWrapper keyStoreWrapper) {
-            this.keyStore = keyStoreWrapper.getKeyStore();
-            this.keyStorePassword = keyStoreWrapper.getKeyStorePassword();
-            return this;
-        }
-
-        public SecuritySocketFactory.Builder appleServer(AppleServer appleServer) {
-            this.host = appleServer.getHost();
-            this.port = appleServer.getPort();
-            return this;
-        }
-
-        public SecuritySocketFactory.Builder host(String host) {
-            this.host = host;
-            return this;
-        }
-
-        public SecuritySocketFactory.Builder port(int port) {
-            this.port = port;
-            return this;
-        }
-
-        public SecuritySocketFactory.Builder keyStore(KeyStore keyStore) {
-            this.keyStore = keyStore;
-            return this;
-        }
-
-        public SecuritySocketFactory.Builder keyStorePassword(String keyStorePassword) {
-            if (null == keyStorePassword) {
-                keyStorePassword = "";
-            }
-            this.keyStorePassword = keyStorePassword;
-            return this;
-        }
-
-        public SecuritySocketFactory build() throws InvalidKeyStoreException {
-            if (host == null) {
-                throw new NullPointerException("host");
-            }
-            if (keyStore == null) {
-                throw new NullPointerException("keystore");
-            }
-            if (keyStorePassword == null) {
-                throw new NullPointerException("keyStorePassword");
-            }
-            return new SecuritySocketFactory(host, port, keyStore, keyStorePassword);
-        }
     }
 
     private class ServerTrustingTrustManager implements X509TrustManager {

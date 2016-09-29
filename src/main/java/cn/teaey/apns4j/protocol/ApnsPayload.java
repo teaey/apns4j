@@ -27,30 +27,25 @@ import java.util.Map;
  * @date 13-8-31
  * @since 1.0.0
  */
-public class NotifyPayload extends Payload {
+public class ApnsPayload extends Payload {
     private static final String ATTR_APS = "aps";
     private static final String ATTR_ALERT = "alert";
     private static final String ATTR_BADGE = "badge";
     private static final String ATTR_SOUND = "sound";
     private static final String ATTR_ALERT_BODY = "body";
+    private static final String ATTR_ALERT_TITLE = "title";
     private static final String ATTR_ALERT_ACTION_LOC_KEY = "action-loc-key";
+    private static final String ATTR_ALERT_TITLE_LOC_KEY = "title-loc-key";
+    private static final String ATTR_ALERT_TITLE_LOC_ARGS = "title-loc-args";
     private static final String ATTR_ALERT_LOC_KEY = "loc-key";
     private static final String ATTR_ALERT_LOC_ARGS = "loc-args";
     private static final String ATTR_ALERT_LAUNCH_IMAGE = "launch-image";
+    private static final String ATTR_CONTENT_AVAILABLE = "content-available";
 
     private final Map<String, Object> apsDict = new HashMap<String, Object>();
 
-    private NotifyPayload() {
+    public ApnsPayload() {
         addDictionary(ATTR_APS, apsDict);
-    }
-
-    /**
-     * <p>newNotifyPayload.</p>
-     *
-     * @return a {@link cn.teaey.apns4j.protocol.NotifyPayload} object.
-     */
-    public static final NotifyPayload newNotifyPayload() {
-        return new NotifyPayload();
     }
 
     /**
@@ -58,7 +53,7 @@ public class NotifyPayload extends Payload {
      *
      * @param msg a {@link String} object.
      */
-    public NotifyPayload alert(String msg) {
+    public ApnsPayload alert(String msg) {
         apsDict.put(ATTR_ALERT, msg);
         return this;
     }
@@ -68,7 +63,7 @@ public class NotifyPayload extends Payload {
      *
      * @param num a int.
      */
-    public NotifyPayload badge(int num) {
+    public ApnsPayload badge(int num) {
         apsDict.put(ATTR_BADGE, num);
         return this;
     }
@@ -78,7 +73,7 @@ public class NotifyPayload extends Payload {
      *
      * @param sound a {@link String} object.
      */
-    public NotifyPayload sound(String sound) {
+    public ApnsPayload sound(String sound) {
         apsDict.put(ATTR_SOUND, sound);
         return this;
     }
@@ -88,8 +83,38 @@ public class NotifyPayload extends Payload {
      *
      * @param body a {@link String} object.
      */
-    public NotifyPayload alertBody(String body) {
+    public ApnsPayload alertBody(String body) {
         ensureAlertMap().put(ATTR_ALERT_BODY, body);
+        return this;
+    }
+
+    /**
+     * added in iOS 8.2
+     * @param title
+     * @return
+     */
+    public ApnsPayload alertTitle(String title) {
+        ensureAlertMap().put(ATTR_ALERT_TITLE, title);
+        return this;
+    }
+
+    /**
+     * added in iOS 8.2
+     * @param titleLocKey
+     * @return
+     */
+    public ApnsPayload alertTitleLocKey(String titleLocKey) {
+        ensureAlertMap().put(ATTR_ALERT_TITLE_LOC_KEY, titleLocKey);
+        return this;
+    }
+
+    /**
+     * added in iOS 8.2
+     * @param titleLocArgs
+     * @return
+     */
+    public ApnsPayload alertTitleLocArgs(String titleLocArgs) {
+        ensureAlertMap().put(ATTR_ALERT_TITLE_LOC_ARGS, titleLocArgs);
         return this;
     }
 
@@ -98,7 +123,7 @@ public class NotifyPayload extends Payload {
      *
      * @param actionLocKey a {@link String} object.
      */
-    public NotifyPayload alertActionLocKey(String actionLocKey) {
+    public ApnsPayload alertActionLocKey(String actionLocKey) {
         ensureAlertMap().put(ATTR_ALERT_ACTION_LOC_KEY, actionLocKey);
         return this;
     }
@@ -108,7 +133,7 @@ public class NotifyPayload extends Payload {
      *
      * @param locKey a {@link String} object.
      */
-    public NotifyPayload alertLocKey(String locKey) {
+    public ApnsPayload alertLocKey(String locKey) {
         ensureAlertMap().put(ATTR_ALERT_LOC_KEY, locKey);
         return this;
     }
@@ -118,7 +143,7 @@ public class NotifyPayload extends Payload {
      *
      * @param args a {@link java.util.List} object.
      */
-    public NotifyPayload alertLocArgs(List args) {
+    public ApnsPayload alertLocArgs(List args) {
         ensureAlertMap().put(ATTR_ALERT_LOC_ARGS, args);
         return this;
     }
@@ -128,7 +153,7 @@ public class NotifyPayload extends Payload {
      *
      * @param args a {@link String} object.
      */
-    public NotifyPayload launchImage(String args) {
+    public ApnsPayload launchImage(String args) {
         ensureAlertMap().put(ATTR_ALERT_LAUNCH_IMAGE, args);
         return this;
     }
@@ -140,5 +165,10 @@ public class NotifyPayload extends Payload {
             apsDict.put(ATTR_ALERT, ret);
         }
         return (Map<String, Object>) ret;
+    }
+
+    public ApnsPayload silent() {
+        addDictionary(ATTR_CONTENT_AVAILABLE, 1);
+        return this;
     }
 }
