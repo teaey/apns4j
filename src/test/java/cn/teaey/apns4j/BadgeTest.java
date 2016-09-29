@@ -15,7 +15,7 @@ public class BadgeTest extends ApnsBaseTestCase {
         ApnsPayload payload = Apns4j.newPayload()
                 .badge(4);
 
-        apnsChannel.sendAndFlush(TestConts.deviceToken, payload);
+        apnsChannel.send(TestConts.deviceToken, payload);
     }
 
     @After

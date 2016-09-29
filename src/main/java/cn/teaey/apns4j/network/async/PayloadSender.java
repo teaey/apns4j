@@ -25,18 +25,18 @@ package cn.teaey.apns4j.network.async;
  */
 public interface PayloadSender<T> {
     /**
-     * <p>sendAndFlush.</p>
+     * <p>send.</p>
      *
      * @param deviceTokenBytes an array of byte.
      * @param payload          a T object.
      */
-    ApnsFuture sendAndFlush(byte[] deviceTokenBytes, T payload);
+    ApnsFuture send(byte[] deviceTokenBytes, T payload);
 
     /**
-     * <p>sendAndFlush.</p>
+     * <p>send.</p>
      *
      * @param deviceTokenString a {@link String} object.
      * @param payload           a T object.
      */
-    ApnsFuture sendAndFlush(String deviceTokenString, T payload);
+    ApnsFuture send(String deviceTokenString, T payload);
 }

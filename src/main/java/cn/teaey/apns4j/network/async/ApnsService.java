@@ -53,11 +53,11 @@ public class ApnsService implements PayloadSender<ApnsPayload> {
         this.tryTimes = tryTimes;
     }
 
-    public ApnsFuture sendAndFlush(String deviceToken, ApnsPayload payload) {
-        return this.sendAndFlush(ApnsHelper.toByteArray(deviceToken), payload);
+    public ApnsFuture send(String deviceToken, ApnsPayload payload) {
+        return this.send(ApnsHelper.toByteArray(deviceToken), payload);
     }
 
-    public ApnsFuture sendAndFlush(byte[] deviceToken, ApnsPayload payload) {
+    public ApnsFuture send(byte[] deviceToken, ApnsPayload payload) {
         if (!START.get()) {
             throw new AsyncServiceShutdownException("AsynService has shutdown");
         }
@@ -104,7 +104,7 @@ public class ApnsService implements PayloadSender<ApnsPayload> {
         @Override
         public Object call() {
             try {
-                return threadSelfConnection.get().sendAndFlush(deviceToken, payload);
+                return threadSelfConnection.get().send(deviceToken, payload);
             } catch (Exception e) {
                 //log.error("Failed cause IOException deviceToken={} payload={}", deviceToken, payload.toJsonString(), e);
                 return e;

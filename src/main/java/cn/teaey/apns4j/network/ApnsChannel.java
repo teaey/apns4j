@@ -69,7 +69,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
         out().flush();
     }
 
-    public ApnsFuture sendAndFlush(byte[] deviceTokenBytes, ApnsPayload apnsPayload, int tryTimes) {
+    public ApnsFuture send(byte[] deviceTokenBytes, ApnsPayload apnsPayload, int tryTimes) {
         checkClosed();
         if(tryTimes < 1) {
             tryTimes = 1;
@@ -102,9 +102,9 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      * @param deviceTokenBytes an array of byte.
      * @param apnsPayload      a {@link ApnsPayload} object.
      */
-    public ApnsFuture sendAndFlush(byte[] deviceTokenBytes, ApnsPayload apnsPayload) {
+    public ApnsFuture send(byte[] deviceTokenBytes, ApnsPayload apnsPayload) {
         checkClosed();
-        return this.sendAndFlush(deviceTokenBytes, apnsPayload, tryTimes);
+        return this.send(deviceTokenBytes, apnsPayload, tryTimes);
     }
 
     /**
@@ -114,9 +114,9 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      * @param apnsPayload       a {@link ApnsPayload} object.
      * @throws java.io.IOException if any.
      */
-    public ApnsFuture sendAndFlush(String deviceTokenString, ApnsPayload apnsPayload, int tryTimes) {
+    public ApnsFuture send(String deviceTokenString, ApnsPayload apnsPayload, int tryTimes) {
         checkClosed();
-        return sendAndFlush(ApnsHelper.toByteArray(deviceTokenString), apnsPayload, tryTimes);
+        return send(ApnsHelper.toByteArray(deviceTokenString), apnsPayload, tryTimes);
     }
 
     /**
@@ -126,9 +126,9 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      * @param apnsPayload       a {@link ApnsPayload} object.
      * @throws java.io.IOException if any.
      */
-    public ApnsFuture sendAndFlush(String deviceTokenString, ApnsPayload apnsPayload) {
+    public ApnsFuture send(String deviceTokenString, ApnsPayload apnsPayload) {
         checkClosed();
-        return this.sendAndFlush(ApnsHelper.toByteArray(deviceTokenString), apnsPayload);
+        return this.send(ApnsHelper.toByteArray(deviceTokenString), apnsPayload);
     }
 
     /**

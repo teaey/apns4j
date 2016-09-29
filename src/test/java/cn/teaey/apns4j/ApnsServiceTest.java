@@ -18,8 +18,8 @@ public class ApnsServiceTest extends ApnsBaseTestCase{
     public void batch() throws ExecutionException, InterruptedException {
         ApnsPayload apnsPayload = Apns4j.newPayload();
         apnsPayload.alert("ABC");
-        ApnsFuture apnsFuture = apnsService.sendAndFlush(TestConts.deviceToken, apnsPayload);
-        ApnsFuture apnsFuture1 = apnsService.sendAndFlush(TestConts.deviceToken, apnsPayload);
+        ApnsFuture apnsFuture = apnsService.send(TestConts.deviceToken, apnsPayload);
+        ApnsFuture apnsFuture1 = apnsService.send(TestConts.deviceToken, apnsPayload);
 
        apnsService.shutdown(100, TimeUnit.SECONDS);
     }

@@ -21,7 +21,7 @@ public class AlertTest extends ApnsBaseTestCase {
                 .sound("default");
 
         //send via channel
-        apnsChannel.sendAndFlush(TestConts.deviceToken, apnsPayload);
+        apnsChannel.send(TestConts.deviceToken, apnsPayload);
 
         //in the end
         apnsChannel.close();

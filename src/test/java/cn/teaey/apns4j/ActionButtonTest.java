@@ -16,7 +16,7 @@ public class ActionButtonTest extends ApnsBaseTestCase {
                 .alertBody("Push by apns4j")
                 .alertActionLocKey("FixMe");
 
-        apnsChannel.sendAndFlush(TestConts.deviceToken, apnsPayload);
+        apnsChannel.send(TestConts.deviceToken, apnsPayload);
 
 
     }
