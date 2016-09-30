@@ -20,7 +20,9 @@ package cn.teaey.apns4j;
 
 import cn.teaey.apns4j.keystore.KeyStoreGetter;
 import cn.teaey.apns4j.keystore.KeyStoreType;
-import cn.teaey.apns4j.network.*;
+import cn.teaey.apns4j.network.ApnsChannelFactory;
+import cn.teaey.apns4j.network.ApnsGateway;
+import cn.teaey.apns4j.network.SecuritySocketFactory;
 import cn.teaey.apns4j.protocol.ApnsPayload;
 
 import java.io.File;
@@ -28,7 +30,6 @@ import java.io.InputStream;
 
 /**
  * @author xiaofei.wxf
- * @date 2015/8/11
  * @since 1.0.2
  */
 public class Apns4j {
@@ -39,6 +40,10 @@ public class Apns4j {
      */
     public static final ApnsPayload newPayload() {
         return new ApnsPayload();
+    }
+
+    public static final ApnsChannelFactoryBuilder newChannelFactoryBuilder() {
+        return new ApnsChannelFactoryBuilder();
     }
 
     public static final class ApnsChannelFactoryBuilder {
@@ -86,10 +91,6 @@ public class Apns4j {
             SecuritySocketFactory securitySocketFactory = new SecuritySocketFactory(this.apnsGateway.host(), this.apnsGateway.port(), keyStoreGetter.keyStore(), keyStoreGetter.keyStorePwd());
             return new ApnsChannelFactory(securitySocketFactory);
         }
-    }
-
-    public static final ApnsChannelFactoryBuilder newChannelFactoryBuilder() {
-        return new ApnsChannelFactoryBuilder();
     }
 
 }

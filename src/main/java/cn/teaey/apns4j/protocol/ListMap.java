@@ -25,7 +25,6 @@ import java.util.Set;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public class ListMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {

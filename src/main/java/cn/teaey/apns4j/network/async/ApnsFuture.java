@@ -27,7 +27,6 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * @author xiaofei.wxf
- * @date 2015/8/11
  */
 public class ApnsFuture implements Future {
     private final Future future;

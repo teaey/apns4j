@@ -22,7 +22,6 @@ import java.io.Closeable;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public interface Channel extends Closeable {
@@ -31,7 +30,6 @@ public interface Channel extends Closeable {
      * to this connection
      *
      * @param data an array of byte.
-     * @throws java.io.IOException if any.
      */
     void send(byte[] data);
 
@@ -42,7 +40,6 @@ public interface Channel extends Closeable {
      *
      * @param data an array of byte.
      * @return a int.
-     * @throws java.io.IOException if any.
      */
     int recv(byte[] data);
 }

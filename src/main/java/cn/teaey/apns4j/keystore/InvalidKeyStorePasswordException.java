@@ -20,7 +20,6 @@ package cn.teaey.apns4j.keystore;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public class InvalidKeyStorePasswordException extends InvalidKeyStoreException {

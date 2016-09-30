@@ -32,7 +32,6 @@ import java.security.cert.X509Certificate;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public final class SecuritySocketFactory {
@@ -97,7 +96,6 @@ public final class SecuritySocketFactory {
      *
      * @param trustManagers an array of {@link javax.net.ssl.TrustManager} objects.
      * @return a {@link javax.net.ssl.SSLSocketFactory} object.
-     * @throws InvalidKeyStoreException if any.
      */
     protected SSLSocketFactory createSSLSocketFactoryWithTrustManagers(TrustManager[] trustManagers) {
         // Get a KeyManager and initialize it

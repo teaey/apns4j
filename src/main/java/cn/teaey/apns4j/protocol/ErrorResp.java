@@ -85,6 +85,15 @@ public class ErrorResp {
         return identifier;
     }
 
+    @Override
+    public String toString() {
+        return "ErrorResp{" +
+                "command=" + command +
+                ", status=" + status +
+                ", identifier=" + identifier +
+                '}';
+    }
+
     public enum Status {
         OK(0, "No errors encountered"),
         ERROR(Integer.MAX_VALUE, "Unknown"),
@@ -114,14 +123,5 @@ public class ErrorResp {
             }
             return Status.ERROR;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ErrorResp{" +
-                "command=" + command +
-                ", status=" + status +
-                ", identifier=" + identifier +
-                '}';
     }
 }

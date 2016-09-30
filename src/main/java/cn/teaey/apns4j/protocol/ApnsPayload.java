@@ -24,7 +24,6 @@ import java.util.Map;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public class ApnsPayload extends Payload {
@@ -52,6 +51,7 @@ public class ApnsPayload extends Payload {
      * <p>alert.</p>
      *
      * @param msg a {@link String} object.
+     * @return ApnsPayload
      */
     public ApnsPayload alert(String msg) {
         apsDict.put(ATTR_ALERT, msg);
@@ -62,6 +62,8 @@ public class ApnsPayload extends Payload {
      * <p>badge.</p>
      *
      * @param num a int.
+     *
+     * @return ApnsPayload
      */
     public ApnsPayload badge(int num) {
         apsDict.put(ATTR_BADGE, num);
@@ -72,6 +74,7 @@ public class ApnsPayload extends Payload {
      * <p>sound.</p>
      *
      * @param sound a {@link String} object.
+     * @return ApnsPayload
      */
     public ApnsPayload sound(String sound) {
         apsDict.put(ATTR_SOUND, sound);
@@ -82,6 +85,7 @@ public class ApnsPayload extends Payload {
      * <p>alertBody.</p>
      *
      * @param body a {@link String} object.
+     * @return ApnsPayload
      */
     public ApnsPayload alertBody(String body) {
         ensureAlertMap().put(ATTR_ALERT_BODY, body);
@@ -90,8 +94,9 @@ public class ApnsPayload extends Payload {
 
     /**
      * added in iOS 8.2
+     *
      * @param title
-     * @return
+     * @return ApnsPayload
      */
     public ApnsPayload alertTitle(String title) {
         ensureAlertMap().put(ATTR_ALERT_TITLE, title);
@@ -100,8 +105,9 @@ public class ApnsPayload extends Payload {
 
     /**
      * added in iOS 8.2
+     *
      * @param titleLocKey
-     * @return
+     * @return ApnsPayload
      */
     public ApnsPayload alertTitleLocKey(String titleLocKey) {
         ensureAlertMap().put(ATTR_ALERT_TITLE_LOC_KEY, titleLocKey);
@@ -110,8 +116,9 @@ public class ApnsPayload extends Payload {
 
     /**
      * added in iOS 8.2
+     *
      * @param titleLocArgs
-     * @return
+     * @return ApnsPayload
      */
     public ApnsPayload alertTitleLocArgs(String titleLocArgs) {
         ensureAlertMap().put(ATTR_ALERT_TITLE_LOC_ARGS, titleLocArgs);
@@ -122,6 +129,7 @@ public class ApnsPayload extends Payload {
      * <p>alertActionLocKey.</p>
      *
      * @param actionLocKey a {@link String} object.
+     * @return ApnsPayload
      */
     public ApnsPayload alertActionLocKey(String actionLocKey) {
         ensureAlertMap().put(ATTR_ALERT_ACTION_LOC_KEY, actionLocKey);
@@ -132,6 +140,7 @@ public class ApnsPayload extends Payload {
      * <p>alertLocKey.</p>
      *
      * @param locKey a {@link String} object.
+     * @return ApnsPayload
      */
     public ApnsPayload alertLocKey(String locKey) {
         ensureAlertMap().put(ATTR_ALERT_LOC_KEY, locKey);
@@ -142,6 +151,7 @@ public class ApnsPayload extends Payload {
      * <p>alertLocArgs.</p>
      *
      * @param args a {@link java.util.List} object.
+     * @return ApnsPayload
      */
     public ApnsPayload alertLocArgs(List args) {
         ensureAlertMap().put(ATTR_ALERT_LOC_ARGS, args);
@@ -152,6 +162,7 @@ public class ApnsPayload extends Payload {
      * <p>launchImage.</p>
      *
      * @param args a {@link String} object.
+     * @return ApnsPayload
      */
     public ApnsPayload launchImage(String args) {
         ensureAlertMap().put(ATTR_ALERT_LAUNCH_IMAGE, args);

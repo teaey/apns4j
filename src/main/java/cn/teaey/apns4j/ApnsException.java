@@ -20,7 +20,6 @@ package cn.teaey.apns4j;
 
 /**
  * @author xiaofei.wxf
- * @date 2015/8/11
  */
 public class ApnsException extends RuntimeException {
     public ApnsException() {

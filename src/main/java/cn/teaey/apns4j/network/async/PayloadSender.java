@@ -20,7 +20,6 @@ package cn.teaey.apns4j.network.async;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public interface PayloadSender<T> {
@@ -29,6 +28,7 @@ public interface PayloadSender<T> {
      *
      * @param deviceTokenBytes an array of byte.
      * @param payload          a T object.
+     * @return feture
      */
     ApnsFuture send(byte[] deviceTokenBytes, T payload);
 
@@ -37,6 +37,7 @@ public interface PayloadSender<T> {
      *
      * @param deviceTokenString a {@link String} object.
      * @param payload           a T object.
+     * @return feture
      */
     ApnsFuture send(String deviceTokenString, T payload);
 }

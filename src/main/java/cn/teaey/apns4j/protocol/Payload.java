@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public abstract class Payload {

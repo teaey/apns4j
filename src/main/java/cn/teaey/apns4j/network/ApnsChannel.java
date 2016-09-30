@@ -42,11 +42,11 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
     private final int id;
     private final SecuritySocketFactory socketFactory;
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private SSLSocket socket;
     private InputStream in;
     private OutputStream out;
     private int tryTimes;
-    private final AtomicBoolean closed = new AtomicBoolean(false);
 
     public ApnsChannel(SecuritySocketFactory socketFactory) {
         this(socketFactory, DEFAULT_TRY_TIMES);
@@ -71,7 +71,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
 
     public ApnsFuture send(byte[] deviceTokenBytes, ApnsPayload apnsPayload, int tryTimes) {
         checkClosed();
-        if(tryTimes < 1) {
+        if (tryTimes < 1) {
             tryTimes = 1;
         }
         ApnsHelper.checkDeviceToken(deviceTokenBytes);
@@ -96,6 +96,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
         }
         return null;
     }
+
     /**
      * Send a payload with a devicetoken bytes(32 bytes)
      *
@@ -112,7 +113,8 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      *
      * @param deviceTokenString a {@link String} object.
      * @param apnsPayload       a {@link ApnsPayload} object.
-     * @throws java.io.IOException if any.
+     * @param tryTimes retry times
+     * @return feture
      */
     public ApnsFuture send(String deviceTokenString, ApnsPayload apnsPayload, int tryTimes) {
         checkClosed();
@@ -124,7 +126,6 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      *
      * @param deviceTokenString a {@link String} object.
      * @param apnsPayload       a {@link ApnsPayload} object.
-     * @throws java.io.IOException if any.
      */
     public ApnsFuture send(String deviceTokenString, ApnsPayload apnsPayload) {
         checkClosed();
@@ -224,6 +225,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
 
     /**
      * <p>socket.</p>
+     * @throws IOException
      */
     protected void socket() throws IOException {
         checkClosed();

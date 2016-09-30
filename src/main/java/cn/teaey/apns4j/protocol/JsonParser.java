@@ -24,7 +24,6 @@ import java.util.Map;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public class JsonParser {

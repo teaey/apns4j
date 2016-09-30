@@ -20,7 +20,7 @@ package cn.teaey.apns4j.network.async;
 
 import cn.teaey.apns4j.ApnsException;
 import cn.teaey.apns4j.ApnsHelper;
-import cn.teaey.apns4j.network.*;
+import cn.teaey.apns4j.network.ApnsChannelFactory;
 import cn.teaey.apns4j.protocol.ApnsPayload;
 
 import java.util.concurrent.*;
@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author teaey
- * @date 13-8-31
  * @since 1.0.0
  */
 public class ApnsService implements PayloadSender<ApnsPayload> {
@@ -45,7 +44,7 @@ public class ApnsService implements PayloadSender<ApnsPayload> {
         }
     };
 
-    public  ApnsService(int executorSize, ApnsChannelFactory apnsChannelFactory, int tryTimes) {
+    public ApnsService(int executorSize, ApnsChannelFactory apnsChannelFactory, int tryTimes) {
         this.size = (executorSize > processors) ? processors : executorSize;
         this.apnsChannelFactory = apnsChannelFactory;
         this.executorService = Executors.newFixedThreadPool(this.size);

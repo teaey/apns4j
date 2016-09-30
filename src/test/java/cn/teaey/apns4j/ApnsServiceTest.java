@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author teaey(xiaofei.wxf)
  * @since 1.0.3
  */
-public class ApnsServiceTest extends ApnsBaseTestCase{
+public class ApnsServiceTest extends ApnsBaseTestCase {
 
     @Test
     public void batch() throws ExecutionException, InterruptedException {
@@ -21,7 +21,7 @@ public class ApnsServiceTest extends ApnsBaseTestCase{
         ApnsFuture apnsFuture = apnsService.send(TestConts.deviceToken, apnsPayload);
         ApnsFuture apnsFuture1 = apnsService.send(TestConts.deviceToken, apnsPayload);
 
-       apnsService.shutdown(100, TimeUnit.SECONDS);
+        apnsService.shutdown(100, TimeUnit.SECONDS);
     }
 
     @After
