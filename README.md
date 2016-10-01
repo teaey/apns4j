@@ -8,6 +8,10 @@
     <version>1.1.0</version>
 </dependency>
 
+```
+
+```
+
 //Step 1
 ApnsChannelFactory apnsChannelFactory = Apns4j.newChannelFactoryBuilder()
 .keyStoreMeta("${path to your keystore}")
@@ -27,7 +31,7 @@ ApnsPayload apnsPayload = Apns4j.newPayload()
 //Step 4 send via channel
 apnsChannel.send(TestConts.deviceToken, apnsPayload);
 
-//Step 5 in the end, apnsChannel can be Recycle and Reuse
+//Step 5 in the end, apnsChannel can be Recycle and Reuse 
 apnsChannel.close();
 
 ```
