@@ -15,7 +15,6 @@ public class AlertTest extends ApnsBaseTestCase {
 
         //create & init notify payload
         ApnsPayload apnsPayload = Apns4j.newPayload()
-                .alertActionLocKey("FixMe")
                 .alertTitle("Title")
                 .alertBody("Pushed by apns4j")
                 .sound("default");

@@ -9,7 +9,7 @@ import cn.teaey.apns4j.network.async.ApnsService;
  * @since 1.0.3
  */
 public class ApnsBaseTestCase {
-    final ApnsChannelFactory apnsChannelFactory = Apns4j.newChannelFactoryBuilder().keyStoreMeta(TestConts.keyStorePath).keyStormPwd(TestConts.keyStorePwd).build();
+    final ApnsChannelFactory apnsChannelFactory = Apns4j.newChannelFactoryBuilder().keyStoreMeta(TestConts.keyStorePath).keyStorePwd(TestConts.keyStorePwd).build();
     final ApnsChannel apnsChannel = apnsChannelFactory.newChannel();
     final ApnsService apnsService = new ApnsService(3, apnsChannelFactory, 3);
 

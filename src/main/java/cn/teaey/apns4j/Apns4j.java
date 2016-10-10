@@ -58,7 +58,7 @@ public class Apns4j {
             return this;
         }
 
-        public ApnsChannelFactoryBuilder keyStormPwd(String keyStorePwd) {
+        public ApnsChannelFactoryBuilder keyStorePwd(String keyStorePwd) {
             ApnsHelper.checkNullThrowException(keyStorePwd, "keyStorePwd");
             this.keyStorePwd = keyStorePwd;
             return this;

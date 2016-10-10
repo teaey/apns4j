@@ -13,7 +13,7 @@
 //Step 1
 ApnsChannelFactory apnsChannelFactory = Apns4j.newChannelFactoryBuilder()
 .keyStoreMeta("${path to your keystore}")
-.keyStormPwd("${keystore password}")
+.keyStorePwd("${keystore password}")
 .build();
 
 //Setp 2
