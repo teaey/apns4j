@@ -7,7 +7,6 @@
     <artifactId>apns4j</artifactId>
     <version>1.1.0</version>
 </dependency>
-
 ```
 
 ```
@@ -22,7 +21,6 @@ ApnsChannel apnsChannel = apnsChannelFactory.newChannel();
 
 //Step 3 create & init notify payload
 ApnsPayload apnsPayload = Apns4j.newPayload()
-        .alertActionLocKey("FixMe")
         .alertTitle("Title")
         .alertBody("Pushed by apns4j")
         .sound("default");
@@ -32,7 +30,6 @@ apnsChannel.send("${target device token}", apnsPayload);
 
 //Step 5 in the end, apnsChannel can be Recycle and Reuse 
 apnsChannel.close();
-
 ```
 
 
