@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class AlertTest extends ApnsBaseTestCase {
 
-    @Test
+//    @Test
     public void alert() throws InterruptedException {
 
         //create & init notify payload

@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class BadgeTest extends ApnsBaseTestCase {
 
-    @Test
+//    @Test
     public void badge() {
         ApnsPayload payload = Apns4j.newPayload()
                 .badge(4);

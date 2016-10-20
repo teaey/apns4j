@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ApnsServiceTest extends ApnsBaseTestCase {
 
-    @Test
+//    @Test
     public void batch() throws ExecutionException, InterruptedException {
         ApnsPayload apnsPayload = Apns4j.newPayload();
         apnsPayload.alert("ABC");

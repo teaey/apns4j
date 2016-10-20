@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class ActionButtonTest extends ApnsBaseTestCase {
 
-    @Test
+//    @Test
     public void actionLocKey() {
         ApnsPayload apnsPayload = Apns4j.newPayload()
                 .alertBody("Push by apns4j")

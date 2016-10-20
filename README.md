@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
+### Quick start
 
 ```
 <dependency>
@@ -35,9 +36,7 @@ apnsChannel.close();
 ```
 
 
-
-Version Control
----
+#### Version Control
 
 ```
 This project uses Semantic Versioning. Version format is X.Y.Z:
