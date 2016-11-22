@@ -182,4 +182,9 @@ public class ApnsPayload extends Payload {
         addDictionary(ATTR_CONTENT_AVAILABLE, 1);
         return this;
     }
+
+    public ApnsPayload extend(String k, Object v) {
+        apsDict.put(k, v);
+        return this;
+    }
 }

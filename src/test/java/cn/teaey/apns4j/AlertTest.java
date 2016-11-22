@@ -8,28 +8,16 @@ import org.junit.Test;
  * @author teaey(xiaofei.wxf)
  * @since 1.0.3
  */
-public class AlertTest extends ApnsBaseTestCase {
+public class AlertTest {
 
-//    @Test
+    @Test
     public void alert() throws InterruptedException {
-
         //create & init notify payload
         ApnsPayload apnsPayload = Apns4j.newPayload()
                 .alertTitle("Title")
                 .alertBody("Pushed by apns4j")
+                .extend("k", "v")
                 .sound("default");
-
-        //send via channel
-        apnsChannel.send(TestConts.deviceToken, apnsPayload);
-
-        //in the end
-        apnsChannel.close();
-
-    }
-
-
-    @After
-    public void destory() {
-        apnsChannel.close();
+        System.out.println(apnsPayload.toJsonString());
     }
 }
