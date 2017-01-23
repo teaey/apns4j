@@ -32,7 +32,7 @@ ApnsPayload apnsPayload = Apns4j.newPayload()
 //Step 4 send via channel
 apnsChannel.send("${target device token}", apnsPayload);
 
-//Step 5 in the end, apnsChannel can be Recycle and Reuse 
+//Step 5 in the end, apnsChannel can be Recycle and Reuse
 apnsChannel.close();
 ```
 
@@ -49,5 +49,5 @@ Y: New feature or huge bug fix patch.
 Z: Minor fix or patch.
 ```
 
-
-
+#### 捐赠
+![donate](https://cloud.githubusercontent.com/assets/3061252/22192809/1806d084-e172-11e6-801b-47271fc6afd5.jpeg)
