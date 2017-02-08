@@ -18,11 +18,11 @@
 
 package cn.teaey.apns4j;
 
-import cn.teaey.apns4j.protocol.ApnsPayload;
 import cn.teaey.apns4j.protocol.InvalidDeviceTokenException;
 import cn.teaey.apns4j.protocol.Protocal;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author teaey
@@ -31,25 +31,7 @@ import java.nio.ByteBuffer;
 public class ApnsHelper {
     private static final int HEADER_LENGTH = 45;
 
-    /**
-     * <p>toRequestBytes.</p>
-     *
-     * @param deviceTokenBytes an array of byte.
-     * @param apnsPayload      a {@link ApnsPayload} object.
-     * @return an array of byte.
-     */
-    public static final byte[] toRequestBytes(byte[] deviceTokenBytes, ApnsPayload apnsPayload) {
-        byte[] payloadBytes = apnsPayload.toJsonBytes();
-        ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH + payloadBytes.length);
-        buffer.put((byte) 1);
-        buffer.putInt(apnsPayload.getIdentifier());
-        buffer.putInt(apnsPayload.getExpiry());
-        buffer.putShort((short) 32);
-        buffer.put(deviceTokenBytes);
-        buffer.putShort((short) payloadBytes.length);
-        buffer.put(payloadBytes);
-        return buffer.array();
-    }
+    public static final AtomicInteger IDENTIFIER = new AtomicInteger(0);
 
     /**
      * <p>toRequestBytes.</p>

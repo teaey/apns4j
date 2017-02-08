@@ -29,6 +29,8 @@ import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,20 +41,61 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
     //private static final Logger log               = LoggerFactory.getLogger(ApnsChannel.class);
     public static final int DEFAULT_TRY_TIMES = 3;
+    private static final int CACHE_SIZE = 2000;
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
     private final int id;
     private final SecuritySocketFactory socketFactory;
     private final AtomicBoolean closed = new AtomicBoolean(false);
-    private SSLSocket socket;
-    private InputStream in;
-    private OutputStream out;
-    private int tryTimes;
+    private volatile SSLSocket socket;
+    private volatile InputStream in;
+    private volatile OutputStream out;
+    private final int tryTimes;
+    private volatile LRUCache<Integer, CacheWapper> payloadCache = new LRUCache<>(CACHE_SIZE);
+
+    private class LRUCache<K, V> extends LinkedHashMap<K, V> {
+        private final int capacity;
+
+        public LRUCache(int cacheSize) {
+            super((int) Math.ceil(cacheSize / 0.75) + 1, 0.75f, true);
+            capacity = cacheSize;
+        }
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry eldest) {
+            return size() > capacity;
+        }
+    }
+
+    private class CacheWapper {
+        private final int id;
+        private final byte[] deviceToken;
+        private final ApnsPayload apnsPayload;
+
+        private CacheWapper(int id, byte[] deviceToken, ApnsPayload apnsPayload) {
+            this.id = id;
+            this.deviceToken = deviceToken;
+            this.apnsPayload = apnsPayload;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public byte[] getDeviceToken() {
+            return deviceToken;
+        }
+
+        public ApnsPayload getApnsPayload() {
+            return apnsPayload;
+        }
+    }
 
     public ApnsChannel(SecuritySocketFactory socketFactory) {
         this(socketFactory, DEFAULT_TRY_TIMES);
     }
 
     public ApnsChannel(SecuritySocketFactory socketFactory, int tryTimes) {
+        _detectSocket();
         this.socketFactory = socketFactory;
         this.tryTimes = tryTimes;
         this.id = COUNTER.incrementAndGet();
@@ -69,14 +112,15 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
         out().flush();
     }
 
-    public ApnsFuture send(byte[] deviceTokenBytes, ApnsPayload apnsPayload, int tryTimes) {
+    public ApnsFuture send(byte[] deviceTokenBytes, ApnsPayload apnsPayload, int tryTimes, boolean resent) {
         checkClosed();
         if (tryTimes < 1) {
             tryTimes = 1;
         }
+        int payloadId = ApnsHelper.IDENTIFIER.incrementAndGet();
         ApnsHelper.checkDeviceToken(deviceTokenBytes);
         String jsonString = apnsPayload.toJsonString();
-        byte[] binaryData = ApnsHelper.toRequestBytes(deviceTokenBytes, jsonString, apnsPayload.getIdentifier(), apnsPayload.getExpiry());
+        byte[] binaryData = ApnsHelper.toRequestBytes(deviceTokenBytes, jsonString, payloadId, apnsPayload.getExpiry());
         for (int i = 1; i <= tryTimes; i++) {
             try {
                 socket();
@@ -94,6 +138,9 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
                     throw new ApnsException(e);
             }
         }
+        if(!resent) {
+            payloadCache.put(payloadId, new CacheWapper(payloadId, deviceTokenBytes, apnsPayload));
+        }
         return null;
     }
 
@@ -105,7 +152,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      */
     public ApnsFuture send(byte[] deviceTokenBytes, ApnsPayload apnsPayload) {
         checkClosed();
-        return this.send(deviceTokenBytes, apnsPayload, tryTimes);
+        return this.send(deviceTokenBytes, apnsPayload, tryTimes, false);
     }
 
     /**
@@ -118,7 +165,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
      */
     public ApnsFuture send(String deviceTokenString, ApnsPayload apnsPayload, int tryTimes) {
         checkClosed();
-        return send(ApnsHelper.toByteArray(deviceTokenString), apnsPayload, tryTimes);
+        return send(ApnsHelper.toByteArray(deviceTokenString), apnsPayload, tryTimes, false);
     }
 
     /**
@@ -143,17 +190,14 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
             if (null == in()) {
                 return null;
             }
-            if (in().available() > 0) {
-                byte[] data = new byte[6];
-                recv(data);
-                return new ErrorResp(data);
-            } else {
-                return null;
-            }
-        } catch (IOException e) {
-            throw new ApnsException(e);
+            byte[] data = new byte[6];
+            recv(data);
+            _close();
+            return new ErrorResp(data);
         } catch (ApnsException e) {
             throw e;
+        } catch (IOException e) {
+            throw new ApnsException(e);
         }
     }
 
@@ -167,6 +211,36 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
                 socket = null;
             }
         }
+    }
+
+    private void _detectSocket() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(!ApnsChannel.this.closed.get()) {
+                    try {
+                        ErrorResp errorResp = recvErrorResp();
+                        if(null == errorResp) {
+                            Thread.sleep(1000);
+                            continue;
+                        }
+                        LRUCache<Integer, CacheWapper> cache = ApnsChannel.this.payloadCache;
+                        ApnsChannel.this.payloadCache = new LRUCache<>(CACHE_SIZE);
+                        for (CacheWapper cacheWapper : cache.values()) {
+                            if (cacheWapper.getId() > errorResp.getIdentifier()) {
+                                if (ApnsChannel.this.closed.get()) {
+                                    break;
+                                }
+                                send(cacheWapper.getDeviceToken(), cacheWapper.getApnsPayload(), 1, true);
+                            }
+                        }
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        }, "Apns4j-Channel-Detector-" + this.id);
+        t.start();
     }
 
     /**

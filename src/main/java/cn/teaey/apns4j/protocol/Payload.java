@@ -18,20 +18,19 @@
 
 package cn.teaey.apns4j.protocol;
 
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author teaey
  * @since 1.0.0
  */
 public abstract class Payload {
-    private static final AtomicInteger IDENTIFIER = new AtomicInteger(Integer.MIN_VALUE);
+
     private static final int DEF_EXPIRY = (int) TimeUnit.DAYS.toSeconds(1);
     private final Map<String, Object> root = new HashMap<String, Object>();
-    private final int identifier = IDENTIFIER.incrementAndGet();
     /**
      *
      */
@@ -74,15 +73,6 @@ public abstract class Payload {
      */
     public byte[] toJsonBytes() {
         return toJsonString().getBytes(Protocal.DEF_CHARSET);
-    }
-
-    /**
-     * <p>Getter for the field <code>identifier</code>.</p>
-     *
-     * @return a int.
-     */
-    public int getIdentifier() {
-        return identifier;
     }
 
     /**
