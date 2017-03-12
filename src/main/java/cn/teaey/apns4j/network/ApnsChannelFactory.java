@@ -33,8 +33,8 @@ public final class ApnsChannelFactory {
         return securitySocketFactory;
     }
 
-    public ApnsChannel newChannel() {
-        return new ApnsChannel(this.securitySocketFactory);
+    public ApnsNettyChannel newChannel() {
+        return new ApnsNettyChannel(this.securitySocketFactory);
     }
 
     public ApnsChannel newChannel(int tryTimes) {

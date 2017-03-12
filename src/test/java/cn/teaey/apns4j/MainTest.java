@@ -2,6 +2,8 @@ package cn.teaey.apns4j;
 
 import cn.teaey.apns4j.network.ApnsChannel;
 import cn.teaey.apns4j.network.ApnsChannelFactory;
+import cn.teaey.apns4j.network.ApnsGateway;
+import cn.teaey.apns4j.network.ApnsNettyChannel;
 import cn.teaey.apns4j.network.async.ApnsFuture;
 import cn.teaey.apns4j.network.async.ApnsService;
 import cn.teaey.apns4j.protocol.ApnsPayload;
@@ -16,8 +18,8 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0.3
  */
 public class MainTest {
-    static final ApnsChannelFactory apnsChannelFactory = Apns4j.newChannelFactoryBuilder().keyStoreMeta(TestConts.keyStorePath).keyStorePwd(TestConts.keyStorePwd).build();
-    static final ApnsChannel apnsChannel = apnsChannelFactory.newChannel();
+    static final ApnsChannelFactory apnsChannelFactory = Apns4j.newChannelFactoryBuilder().keyStoreMeta(TestConts.keyStorePath).keyStorePwd(TestConts.keyStorePwd).apnsGateway(ApnsGateway.DEVELOPMENT).build();
+    static final ApnsNettyChannel apnsChannel = apnsChannelFactory.newChannel();
     static final ApnsService apnsService = new ApnsService(3, apnsChannelFactory, 3);
     public static void main(String[] args) {
         ApnsPayload apnsPayload = Apns4j.newPayload()

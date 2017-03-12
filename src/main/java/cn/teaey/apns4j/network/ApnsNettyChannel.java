@@ -24,21 +24,40 @@ import cn.teaey.apns4j.network.async.ApnsFuture;
 import cn.teaey.apns4j.network.async.PayloadSender;
 import cn.teaey.apns4j.protocol.ApnsPayload;
 import cn.teaey.apns4j.protocol.ErrorResp;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http2.Http2SecurityUtil;
+import io.netty.handler.ssl.*;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocket;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static sun.management.snmp.AdaptorBootstrap.PropertyNames.PORT;
+import static sun.util.locale.provider.LocaleProviderAdapter.Type.HOST;
+
 /**
  * @author teaey(xiaofei.wxf)
  * @since 1.0.3
  */
-public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
+public class ApnsNettyChannel implements Channel, PayloadSender<ApnsPayload> {
     public static final int DEFAULT_TRY_TIMES = 3;
     private static final int CACHE_SIZE = 2000;
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
@@ -50,6 +69,8 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
     private volatile OutputStream out;
     private final int tryTimes;
     private volatile LRUCache<Integer, CacheWapper> payloadCache = new LRUCache<>(CACHE_SIZE);
+
+    private SocketChannel channel;
 
     private class LRUCache<K, V> extends LinkedHashMap<K, V> {
         private final int capacity;
@@ -89,11 +110,61 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
         }
     }
 
-    public ApnsChannel(SecuritySocketFactory socketFactory) {
+    public ApnsNettyChannel(SecuritySocketFactory socketFactory) {
         this(socketFactory, DEFAULT_TRY_TIMES);
     }
 
-    public ApnsChannel(SecuritySocketFactory socketFactory, int tryTimes) {
+    public ApnsNettyChannel(SecuritySocketFactory socketFactory, int tryTimes) {
+        SSLContext sslContext = SSLUtil.initSSLContext("/Users/teaey/Documents/apns4j/aps_development.p12", "1234");
+        final SSLEngine sslEngine = sslContext.createSSLEngine();
+        sslEngine.setUseClientMode(true);
+
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group)
+                    .channel(NioSocketChannel.class)
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .handler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        public void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline p = ch.pipeline();
+                            p.addLast(new SslHandler(sslEngine));
+                            //p.addLast(new LoggingHandler(LogLevel.INFO));
+                            p.addLast(new ChannelInboundHandlerAdapter() {
+                                @Override
+                                public void channelActive(ChannelHandlerContext ctx) {
+                                    System.out.println();
+                                }
+
+                                @Override
+                                public void channelRead(ChannelHandlerContext ctx, Object msg) {
+                                    ctx.write(msg);
+                                }
+
+                                @Override
+                                public void channelReadComplete(ChannelHandlerContext ctx) {
+                                    ctx.flush();
+                                }
+
+                                @Override
+                                public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+                                    // Close the connection when an exception is raised.
+                                    cause.printStackTrace();
+                                    ctx.close();
+                                }
+                            });
+                        }
+                    });
+
+            // Start the client.
+            ChannelFuture f = b.connect("gateway.sandbox.push.apple.com", 2195).sync();
+
+            channel = (SocketChannel) f.channel();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         _detectSocket();
         this.socketFactory = socketFactory;
         this.tryTimes = tryTimes;
@@ -104,7 +175,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
     /**
      * <p>flush.</p>
      *
-     * @throws java.io.IOException if any.
+     * @throws IOException if any.
      */
     private void flush() throws IOException {
         checkClosed();
@@ -121,21 +192,8 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
         String jsonString = apnsPayload.toJsonString();
         byte[] binaryData = ApnsHelper.toRequestBytes(deviceTokenBytes, jsonString, payloadId, apnsPayload.getExpiry());
         for (int i = 1; i <= tryTimes; i++) {
-            try {
-                socket();
-                out().write(binaryData);
-                flush();
-                //log.debug("Success send payload : {} to device : {} try : {}", new Object[]{jsonString, deviceTokenBytes, i});
+                channel.writeAndFlush(Unpooled.wrappedBuffer(binaryData));
                 break;
-            } catch (IOException e) {
-                try {
-                    _closeSocket();
-                } catch (IOException e1) {
-                }
-                //log.error("Failed send payload : {} to device : {} try : {}", new Object[]{jsonString, deviceTokenBytes, e});
-                if (i == tryTimes)
-                    throw new ApnsException(e);
-            }
         }
         if(!resent) {
             payloadCache.put(payloadId, new CacheWapper(payloadId, deviceTokenBytes, apnsPayload));
@@ -216,18 +274,18 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(!ApnsChannel.this.closed.get()) {
+                while(!ApnsNettyChannel.this.closed.get()) {
                     try {
                         ErrorResp errorResp = recvErrorResp();
                         if(null == errorResp) {
                             Thread.sleep(1000);
                             continue;
                         }
-                        LRUCache<Integer, CacheWapper> cache = ApnsChannel.this.payloadCache;
-                        ApnsChannel.this.payloadCache = new LRUCache<>(CACHE_SIZE);
+                        LRUCache<Integer, CacheWapper> cache = ApnsNettyChannel.this.payloadCache;
+                        ApnsNettyChannel.this.payloadCache = new LRUCache<>(CACHE_SIZE);
                         for (CacheWapper cacheWapper : cache.values()) {
                             if (cacheWapper.getId() > errorResp.getIdentifier()) {
-                                if (ApnsChannel.this.closed.get()) {
+                                if (ApnsNettyChannel.this.closed.get()) {
                                     break;
                                 }
                                 send(cacheWapper.getDeviceToken(), cacheWapper.getApnsPayload(), 1, true);
@@ -315,7 +373,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
     /**
      * <p>out.</p>
      *
-     * @return a {@link java.io.OutputStream} object.
+     * @return a {@link OutputStream} object.
      */
     protected OutputStream out() {
         return this.out;
@@ -324,7 +382,7 @@ public class ApnsChannel implements Channel, PayloadSender<ApnsPayload> {
     /**
      * <p>in.</p>
      *
-     * @return a {@link java.io.InputStream} object.
+     * @return a {@link InputStream} object.
      */
     protected InputStream in() {
         return this.in;

@@ -25,6 +25,9 @@ import java.io.Closeable;
  * @since 1.0.0
  */
 public interface Channel extends Closeable {
+    interface Handler {
+        void handle(byte[] data);
+    }
     /**
      * Writes <code>data.length</code> bytes from the specified byte array
      * to this connection
@@ -41,5 +44,10 @@ public interface Channel extends Closeable {
      * @param data an array of byte.
      * @return a int.
      */
+    @Deprecated
     int recv(byte[] data);
+
+    int id();
+
+    void handler(Handler handler);
 }
