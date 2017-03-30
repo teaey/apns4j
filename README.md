@@ -9,7 +9,7 @@
 <dependency>
     <groupId>cn.teaey.apns4j</groupId>
     <artifactId>apns4j</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.4</version>
 </dependency>
 ```
 
